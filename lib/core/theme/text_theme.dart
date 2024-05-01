@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skk_iden_mobile/core/colors.dart';
+import 'package:skk_iden_mobile/core/theme/colors.dart';
 
 TextTheme textTheme = const TextTheme(
   displayLarge: TextStyle(

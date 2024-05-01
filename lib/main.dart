@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skk_iden_mobile/core/credential_saver.dart';
+import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_cubit.dart';
+import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
+import 'package:skk_iden_mobile/wrapper.dart';
+
+import 'package:skk_iden_mobile/injection_container.dart' as di;
 import 'package:skk_iden_mobile/core/keys.dart';
 import 'package:skk_iden_mobile/core/theme/theme.dart';
-import 'package:skk_iden_mobile/features/common/login_page.dart';
+import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:skk_iden_mobile/features/shared/cubit/network_check_cubit.dart';
+import 'package:skk_iden_mobile/injection_container.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await di.init();
+
+  await CredentialSaver.init();
+
   runApp(const App());
 }
 
@@ -12,11 +27,28 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      navigatorKey: navigatorKey,
-      home: const LoginPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => NetworkCheckCubit(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<AuthCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<AuthLoginInfoCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<SignOutCubit>(),
+        ),
+      ],
+      child: MaterialApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        navigatorKey: navigatorKey,
+        home: const Wrapper(),
+      ),
     );
   }
 }

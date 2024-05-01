@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skk_iden_mobile/core/colors.dart';
-import 'package:skk_iden_mobile/core/text_theme.dart';
+import 'package:skk_iden_mobile/core/theme/colors.dart';
+import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 
 ThemeData get lightTheme {
   return ThemeData.from(
@@ -28,17 +28,3 @@ ColorScheme colorScheme = ColorScheme.fromSeed(
   onPrimary: primaryBackgroundColor,
   onSecondary: secondaryBackgroundColor,
 );
-
-ThemeData lightThemes = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryBackgroundColor,
-      primary: primaryColor,
-      secondary: secondaryColor,
-      background: primaryBackgroundColor,
-      onBackground: primaryColor,
-      onPrimary: primaryBackgroundColor,
-      onSecondary: secondaryBackgroundColor,
-      error: dangerColor
-    ),
-    scaffoldBackgroundColor: scaffoldColor,
-    primaryColor: primaryColor);
