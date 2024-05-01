@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skk_iden_mobile/core/credential_saver.dart';
+import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/core/extensions/extension.dart';
 
 import 'package:skk_iden_mobile/core/preferences/asset_helper.dart';
 import 'package:skk_iden_mobile/core/state/data_state.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
-import 'package:skk_iden_mobile/core/keys.dart';
+import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/pages/login_page.dart';
@@ -45,6 +45,8 @@ class _SkkIdenState extends State<SkkIden> {
     return BlocListener<SignOutCubit, DataState<bool>>(
       listener: (_, state) {
         if (state.isSuccess) {
+          CredentialSaver.accessToken = null;
+          CredentialSaver.userInfoModel = null;
           navigatorKey.currentState!.pop();
           navigatorKey.currentState!.pushReplacement(
             MaterialPageRoute(

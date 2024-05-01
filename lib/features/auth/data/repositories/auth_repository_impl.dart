@@ -1,12 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import 'package:skk_iden_mobile/core/api_response.dart';
-import 'package:skk_iden_mobile/core/const.dart';
-import 'package:skk_iden_mobile/core/credential_saver.dart';
+import 'package:skk_iden_mobile/core/utils/api_response.dart';
+import 'package:skk_iden_mobile/core/utils/const.dart';
+import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/core/errors/exception.dart';
 import 'package:skk_iden_mobile/core/errors/failure.dart';
-import 'package:skk_iden_mobile/core/network_info.dart';
 import 'package:skk_iden_mobile/features/auth/data/datasources/auth_datasource.dart';
 import 'package:skk_iden_mobile/features/auth/data/datasources/auth_preference_helper.dart';
 import 'package:skk_iden_mobile/features/auth/data/models/login_response_model.dart';
@@ -15,12 +14,10 @@ import 'package:skk_iden_mobile/features/auth/domain/repositories/auth_repositor
 class AuthRepositoryImpl implements AuthRepository {
   final AuthDataSource authDataSource;
   final AuthPreferenceHelper authPreferenceHelper;
-  final NetworkInfo networkInfo;
 
   AuthRepositoryImpl({
     required this.authDataSource,
     required this.authPreferenceHelper,
-    required this.networkInfo,
   });
 
   @override

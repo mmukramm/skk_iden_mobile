@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
-import 'package:skk_iden_mobile/core/api_response.dart';
-import 'package:skk_iden_mobile/core/const.dart';
+import 'package:skk_iden_mobile/core/utils/api_response.dart';
+import 'package:skk_iden_mobile/core/utils/const.dart';
 
 part 'auth_datasource.g.dart';
 

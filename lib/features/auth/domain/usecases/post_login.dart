@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import 'package:skk_iden_mobile/core/errors/failure.dart';
-import 'package:skk_iden_mobile/core/usecase.dart';
+import 'package:skk_iden_mobile/core/usecases/usecase.dart';
 import 'package:skk_iden_mobile/features/auth/data/datasources/auth_datasource.dart';
 import 'package:skk_iden_mobile/features/auth/domain/repositories/auth_repository.dart';
 

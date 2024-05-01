@@ -39,7 +39,6 @@ dependencies:
   flutter_form_builder: ^9.2.1
   form_builder_validators: ^9.1.0
   flutter_bloc: ^8.1.5
-  internet_connection_checker: ^1.0.0+1
   retrofit: ^4.1.0
   dio: ^5.4.3+1
   dartz: ^0.10.1

@@ -1,4 +1,4 @@
-import 'package:skk_iden_mobile/core/const.dart';
+import 'package:skk_iden_mobile/core/utils/const.dart';
 
 abstract class Failure {
   final String message;

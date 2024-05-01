@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skk_iden_mobile/core/no_params.dart';
+import 'package:skk_iden_mobile/core/usecases/no_params.dart';
 import 'package:skk_iden_mobile/core/state/data_state.dart';
 import 'package:skk_iden_mobile/features/auth/domain/usecases/delete_access_token.dart';
 

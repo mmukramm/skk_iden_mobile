@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:skk_iden_mobile/core/credential_saver.dart';
 import 'package:skk_iden_mobile/core/preferences/asset_helper.dart';
 import 'package:skk_iden_mobile/core/extensions/extension.dart';
-import 'package:skk_iden_mobile/core/keys.dart';
+import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/core/state/data_state.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
@@ -26,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(CredentialSaver.accessToken);
     return BlocListener<AuthCubit, DataState<bool>>(
         listener: (_, state) {
           if (state.isFailure) {

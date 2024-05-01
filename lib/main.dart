@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skk_iden_mobile/core/credential_saver.dart';
+import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
 import 'package:skk_iden_mobile/wrapper.dart';
 
 import 'package:skk_iden_mobile/injection_container.dart' as di;
-import 'package:skk_iden_mobile/core/keys.dart';
+import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/core/theme/theme.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_cubit.dart';
-import 'package:skk_iden_mobile/features/shared/cubit/network_check_cubit.dart';
 import 'package:skk_iden_mobile/injection_container.dart';
 
 void main() async{
@@ -29,9 +28,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => NetworkCheckCubit(),
-        ),
         BlocProvider(
           create: (_) => getIt<AuthCubit>(),
         ),

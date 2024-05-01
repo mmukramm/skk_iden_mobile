@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:skk_iden_mobile/core/network_info.dart';
 import 'package:skk_iden_mobile/features/auth/data/datasources/auth_preference_helper.dart';
 import 'package:skk_iden_mobile/features/auth/data/datasources/auth_datasource.dart';
 import 'package:skk_iden_mobile/features/auth/data/repositories/auth_repository_impl.dart';
@@ -22,7 +20,6 @@ Future<void> init() async {
   initUseCases();
   initRepositories();
   initDataSources();
-  initNetworkCheck();
   await initExternal();
 }
 
@@ -46,7 +43,6 @@ void initRepositories() {
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       authDataSource: getIt(),
-      networkInfo: getIt(),
       authPreferenceHelper: getIt(),
     ),
   );
@@ -62,16 +58,10 @@ void initDataSources() {
   );
 }
 
-void initNetworkCheck() {
-  getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(getIt()));
-}
-
 Future<void> initExternal() async {
   final preference = await SharedPreferences.getInstance();
 
   getIt.registerLazySingleton(() => preference);
 
   getIt.registerLazySingleton(() => Dio());
-
-  getIt.registerLazySingleton(() => InternetConnectionChecker());
 }

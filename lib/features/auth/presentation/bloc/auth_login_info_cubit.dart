@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skk_iden_mobile/core/credential_saver.dart';
-import 'package:skk_iden_mobile/core/no_params.dart';
+import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
+import 'package:skk_iden_mobile/core/usecases/no_params.dart';
 import 'package:skk_iden_mobile/core/state/data_state.dart';
 import 'package:skk_iden_mobile/features/auth/data/models/user_info_model.dart';
 import 'package:skk_iden_mobile/features/auth/domain/usecases/delete_access_token.dart';
@@ -31,11 +31,6 @@ class AuthLoginInfoCubit extends Cubit<DataState> {
   void removeAccessToken() async {
     emit(DataState.inProgress());
 
-    final result = await deleteAccessToken(NoParams());
-
-    result.fold(
-      (l) => DataState.failure(l.message),
-      (r) => r ? DataState.empty() : DataState.failure("Something went wrong"),
-    );
+    await deleteAccessToken(NoParams());
   }
 }
