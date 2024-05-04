@@ -99,6 +99,28 @@ class _SkkIdenState extends State<SkkIden> {
                   const SizedBox(
                     height: 12,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Selamat Datang,",
+                          style: textTheme.titleMedium!
+                              .copyWith(color: secondaryBackgroundColor),
+                        ),
+                        Text(
+                          CredentialSaver.userInfoModel!.name ?? "",
+                          style: textTheme.bodyLarge!.copyWith(
+                            color: primaryBackgroundColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   CredentialSaver.userInfoModel!.isAdmin!
                       ? _withMenuNavigation()
                       : const SizedBox(),
@@ -136,7 +158,19 @@ class _SkkIdenState extends State<SkkIden> {
 
   Column _withMenuNavigation() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Text(
+            "Menu",
+            style: textTheme.titleMedium!
+                .copyWith(color: secondaryBackgroundColor),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
         CustomListTile(
           isSelected: selectedPage == 0,
           title: "Home",
