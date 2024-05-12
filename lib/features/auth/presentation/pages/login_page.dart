@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:skk_iden_mobile/core/preferences/asset_helper.dart';
+import 'package:skk_iden_mobile/core/helper/asset_helper.dart';
 import 'package:skk_iden_mobile/core/extensions/extension.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/core/state/data_state.dart';
@@ -11,6 +11,8 @@ import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 import 'package:skk_iden_mobile/features/auth/data/datasources/auth_datasource.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:skk_iden_mobile/features/shared/widget/custom_password_text_field.dart';
+import 'package:skk_iden_mobile/features/shared/widget/custom_text_field.dart';
 import 'package:skk_iden_mobile/wrapper.dart';
 
 class LoginPage extends StatefulWidget {
@@ -191,138 +193,3 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class CustomTextField extends StatelessWidget {
-  final String name, labelText, hintText;
-  final TextAlign labelTextAlign;
-  final List<String? Function(String?)>? validators;
-
-  const CustomTextField({
-    super.key,
-    required this.name,
-    required this.labelText,
-    required this.hintText,
-    this.labelTextAlign = TextAlign.start,
-    this.validators,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          labelText,
-          textAlign: labelTextAlign,
-          style: textTheme.titleMedium,
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        FormBuilderTextField(
-          name: name,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: textTheme.bodyLarge!.copyWith(
-              color: secondaryColor,
-            ),
-            contentPadding: const EdgeInsets.all(12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          validator: validators != null
-              ? FormBuilderValidators.compose(validators!)
-              : null,
-        ),
-      ],
-    );
-  }
-}
-
-class CustomPasswordTextField extends StatefulWidget {
-  final String name, labelText, hintText;
-  final TextAlign labelTextAlign;
-  final List<String? Function(String?)>? validators;
-
-  const CustomPasswordTextField({
-    super.key,
-    required this.name,
-    required this.labelText,
-    required this.hintText,
-    this.labelTextAlign = TextAlign.start,
-    this.validators,
-  });
-
-  @override
-  State<CustomPasswordTextField> createState() =>
-      _CustomPasswordTextFieldState();
-}
-
-class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
-  late final ValueNotifier<bool> isVisible;
-
-  @override
-  void initState() {
-    super.initState();
-    isVisible = ValueNotifier(true);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    isVisible.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          widget.labelText,
-          textAlign: widget.labelTextAlign,
-          style: textTheme.titleMedium,
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        ValueListenableBuilder(
-          valueListenable: isVisible,
-          builder: (context, value, child) {
-            return FormBuilderTextField(
-              name: widget.name,
-              obscureText: value,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                hintStyle: textTheme.bodyLarge!.copyWith(
-                  color: secondaryColor,
-                ),
-                contentPadding: const EdgeInsets.all(12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    isVisible.value = !value;
-                  },
-                  icon: SvgPicture.asset(
-                    value
-                        ? AssetPath.getIcon("eye_close.svg")
-                        : AssetPath.getIcon("eye_open.svg"),
-                    colorFilter:
-                        const ColorFilter.mode(primaryColor, BlendMode.srcIn),
-                    width: 24,
-                    height: 24,
-                  ),
-                ),
-              ),
-              validator: widget.validators != null
-                  ? FormBuilderValidators.compose(widget.validators!)
-                  : null,
-            );
-          },
-        ),
-      ],
-    );
-  }
-}

@@ -1,11 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/core/extensions/extension.dart';
 
-import 'package:skk_iden_mobile/core/preferences/asset_helper.dart';
+import 'package:skk_iden_mobile/core/helper/asset_helper.dart';
 import 'package:skk_iden_mobile/core/state/data_state.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
@@ -35,7 +34,7 @@ class _SkkIdenState extends State<SkkIden> {
     signOutCubit = context.read<SignOutCubit>();
     pages = [
       const HomePage(),
-      const KeywordstPage(),
+      const KeywordsPage(),
       const UsersPage(),
     ];
   }

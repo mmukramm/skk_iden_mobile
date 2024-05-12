@@ -12,6 +12,11 @@ import 'package:skk_iden_mobile/features/auth/domain/usecases/post_login.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
+import 'package:skk_iden_mobile/features/keywords/bloc/keywords_cubit.dart';
+import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
+import 'package:skk_iden_mobile/features/shared/data/repositories/keywords_repository_impl.dart';
+import 'package:skk_iden_mobile/features/shared/domain/repositories/keywords_repository.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/get_all_keyword.dart';
 
 final getIt = GetIt.instance;
 
@@ -30,6 +35,7 @@ void initBlocs() {
         getIt(),
       ));
   getIt.registerFactory(() => SignOutCubit(getIt()));
+  getIt.registerFactory(() => KeywordsCubit(getIt()));
 }
 
 void initUseCases() {
@@ -37,6 +43,7 @@ void initUseCases() {
   getIt.registerLazySingleton(() => GetAccessToken(getIt()));
   getIt.registerLazySingleton(() => GetUserLoginInfo(getIt()));
   getIt.registerLazySingleton(() => DeleteAccessToken(getIt()));
+  getIt.registerLazySingleton(() => GetAllKeyword(getIt()));
 }
 
 void initRepositories() {
@@ -45,6 +52,10 @@ void initRepositories() {
       authDataSource: getIt(),
       authPreferenceHelper: getIt(),
     ),
+  );
+
+  getIt.registerLazySingleton<KeywordsRepository>(
+    () => KeywordsRepositoryImpl(keywordsDataSource: getIt()),
   );
 }
 
@@ -55,6 +66,10 @@ void initDataSources() {
 
   getIt.registerLazySingleton<AuthPreferenceHelper>(
     () => AuthPreferenceHelperImpl(getIt()),
+  );
+
+  getIt.registerLazySingleton(
+    () => KeywordsDataSource(getIt()),
   );
 }
 

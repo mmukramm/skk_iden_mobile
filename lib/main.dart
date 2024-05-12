@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
+import 'package:skk_iden_mobile/features/keywords/bloc/keywords_cubit.dart';
 import 'package:skk_iden_mobile/wrapper.dart';
 
 import 'package:skk_iden_mobile/injection_container.dart' as di;
@@ -11,9 +12,9 @@ import 'package:skk_iden_mobile/core/theme/theme.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:skk_iden_mobile/injection_container.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await di.init();
 
   await CredentialSaver.init();
@@ -36,6 +37,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => getIt<SignOutCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<KeywordsCubit>(),
         ),
       ],
       child: MaterialApp(
