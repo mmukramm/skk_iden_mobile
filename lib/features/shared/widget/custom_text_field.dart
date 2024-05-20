@@ -7,6 +7,7 @@ import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 class CustomTextField extends StatelessWidget {
   final String name, hintText;
   final String? labelText;
+  final int maxLines;
   final TextAlign labelTextAlign;
   final List<String? Function(String?)>? validators;
 
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.name,
     this.labelText,
+    this.maxLines = 1,
     required this.hintText,
     this.labelTextAlign = TextAlign.start,
     this.validators,
@@ -45,6 +47,7 @@ class CustomTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
+          maxLines: maxLines,
           validator: validators != null
               ? FormBuilderValidators.compose(validators!)
               : null,

@@ -1,8 +1,9 @@
-class KeywordsState <T> {
+class KeywordsState<T> {
   final bool isInProgress;
   final bool isOnLoadmore;
   final bool isFailure;
   final bool isSuccess;
+  final bool isMutateDataSuccess;
   final bool isEmpty;
   final String? message;
   final T? data;
@@ -12,6 +13,7 @@ class KeywordsState <T> {
     this.isOnLoadmore = false,
     this.isFailure = false,
     this.isSuccess = false,
+    this.isMutateDataSuccess = false,
     this.isEmpty = false,
     this.message = "",
     this.data,
@@ -19,9 +21,7 @@ class KeywordsState <T> {
 
   factory KeywordsState.initial() => const KeywordsState();
 
-  factory KeywordsState.onLoadmore() => const KeywordsState(
-        isOnLoadmore: true,
-      );
+ 
   factory KeywordsState.inProgress() => const KeywordsState(isInProgress: true);
 
   factory KeywordsState.failure(String? message) =>
@@ -29,5 +29,13 @@ class KeywordsState <T> {
 
   factory KeywordsState.empty() => const KeywordsState(isEmpty: true);
 
-  factory KeywordsState.success({required T data}) => KeywordsState(isSuccess: true, data: data);
+  factory KeywordsState.success({required T data}) =>
+      KeywordsState(isSuccess: true, data: data);
+
+ factory KeywordsState.onLoadmore() => const KeywordsState(
+        isOnLoadmore: true,
+      );
+
+  factory KeywordsState.mutateDataSuccess({required String message}) =>
+      KeywordsState(isMutateDataSuccess: true, message: message);
 }

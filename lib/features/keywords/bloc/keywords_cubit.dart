@@ -1,17 +1,34 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/state/keywords_state.dart';
+import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/delete_keyword.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/get_all_keyword.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/post_keyword.dart';
 
 class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
   GetAllKeyword getAllKeyword;
+  PostKeyword postKeyword;
+  DeleteKeyword deleteKeyword;
 
-  KeywordsCubit(this.getAllKeyword) : super(KeywordsState.initial());
+  KeywordsCubit(this.getAllKeyword, this.postKeyword, this.deleteKeyword)
+      : super(KeywordsState.initial());
 
-  void getKeywords(int page) async {
+  void getKeywords({
+    required int page,
+    String key = "",
+  }) async {
     emit(KeywordsState.inProgress());
 
-    final result = await getAllKeyword(page);
+    debugPrint('Cubiiiiiit : $key');
+
+    final result = await getAllKeyword(
+      GetAllKeywordParams(
+        page: page,
+        key: key,
+      ),
+    );
 
     result.fold(
       (l) => emit(KeywordsState.failure(l.message)),
@@ -19,10 +36,15 @@ class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
     );
   }
 
-  void getMoreKeywords(int page) async {
+  void getMoreKeywords({
+    required int page,
+    String key = "",
+  }) async {
     emit(KeywordsState.onLoadmore());
 
-    final result = await getAllKeyword(page);
+    final result = await getAllKeyword(
+      GetAllKeywordParams(page: page, key: key),
+    );
 
     result.fold(
       (l) => emit(KeywordsState.failure(l.message)),
@@ -30,14 +52,29 @@ class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
     );
   }
 
-  // void getMoreKeywords(int page) async {
-  //   emit(DataState.inProgress());
+  void addKeyword({
+    required PostKeywordParams postKeywordParams,
+  }) async {
+    emit(KeywordsState.inProgress());
 
-  //   final result = await getAllKeyword(page);
+    final result = await postKeyword(postKeywordParams);
 
-  //   result.fold(
-  //     (l) => emit(DataState.failure(l.message)),
-  //     (r) => emit(DataState.success(data: r)),
-  //   );
-  // }
+    result.fold(
+      (l) => emit(KeywordsState.failure(l.message)),
+      (r) => emit(KeywordsState.mutateDataSuccess(message: r)),
+    );
+  }
+
+  void removeKeyword({
+    required String id,
+  }) async {
+    emit(KeywordsState.inProgress());
+
+    final result = await deleteKeyword(id);
+
+    result.fold(
+      (l) => emit(KeywordsState.failure(l.message)),
+      (r) => emit(KeywordsState.mutateDataSuccess(message: r)),
+    );
+  }
 }

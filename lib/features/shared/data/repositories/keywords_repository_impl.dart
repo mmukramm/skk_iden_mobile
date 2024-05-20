@@ -14,16 +14,71 @@ class KeywordsRepositoryImpl implements KeywordsRepository {
   KeywordsRepositoryImpl({required this.keywordsDataSource});
 
   @override
-  Future<Either<Failure, Keyword>> getKeywordsPagination(int page) async {
+  Future<Either<Failure, Keyword>> getKeywordsPagination(
+    GetAllKeywordParams getAllKeywordParams,
+  ) async {
     try {
+      debugPrint('Repository : ${getAllKeywordParams.key}');
+
       final result = await keywordsDataSource.getKeywords(
-          'Bearer ${CredentialSaver.accessToken}', page);
+        'Bearer ${CredentialSaver.accessToken}',
+        getAllKeywordParams.key,
+        getAllKeywordParams.page,
+      );
 
       debugPrint(result.data.toString());
 
       final keyword = Keyword.fromMap(result.data);
 
       return Right(keyword);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        return const Left(ConnectionFailure(kNoInternetConnection));
+      }
+
+      if (e.response != null) {
+        return Left(authFailureMessageHandler(
+            ApiResponse.fromJson(e.response!.data).message!));
+      }
+
+      return Left(ServerFailure(e.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> postKeyword(PostKeywordParams postKeywordParams) async {
+    try {
+      debugPrint('Repository : ${postKeywordParams.keyword}');
+
+      final result = await keywordsDataSource.addKeyword(
+        'Bearer ${CredentialSaver.accessToken}',
+        postKeywordParams.toJson(),
+      );
+
+      return Right(result.data as String);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        return const Left(ConnectionFailure(kNoInternetConnection));
+      }
+
+      if (e.response != null) {
+        return Left(authFailureMessageHandler(
+            ApiResponse.fromJson(e.response!.data).message!));
+      }
+
+      return Left(ServerFailure(e.message!));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, String>> deleteKeyword(String id) async {
+    try {
+      final result = await keywordsDataSource.deleteKeyword(
+        'Bearer ${CredentialSaver.accessToken}',
+        id,
+      );
+
+      return Right(result.data as String);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
         return const Left(ConnectionFailure(kNoInternetConnection));
