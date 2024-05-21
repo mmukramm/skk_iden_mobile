@@ -12,6 +12,7 @@ import 'package:skk_iden_mobile/features/auth/domain/usecases/post_login.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_cubit.dart';
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
+import 'package:skk_iden_mobile/features/home/bloc/home_cubit.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/keywords_cubit.dart';
 import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
 import 'package:skk_iden_mobile/features/shared/data/repositories/keywords_repository_impl.dart';
@@ -40,6 +41,9 @@ void initBlocs() {
   getIt.registerFactory(() => KeywordsCubit(
         getIt(),
         getIt(),
+        getIt(),
+      ));
+  getIt.registerFactory(() => HomeCubit(
         getIt(),
       ));
 }

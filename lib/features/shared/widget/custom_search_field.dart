@@ -13,7 +13,7 @@ class CustomSearchField extends StatefulWidget {
   final ValueChanged<String?>? onChange;
   final List<String? Function(String?)>? validators;
   final Duration duration;
-  final bool dailyOnChanged;
+  final bool delayOnChanged;
   final VoidCallback? onClickClearIcon;
 
   const CustomSearchField({
@@ -24,7 +24,7 @@ class CustomSearchField extends StatefulWidget {
     this.duration = const Duration(milliseconds: 500),
     this.labelTextAlign = TextAlign.start,
     this.onChange,
-    this.dailyOnChanged = true,
+    this.delayOnChanged = true,
     this.validators,
     this.onClickClearIcon,
   });
@@ -86,7 +86,7 @@ class _CustomSearchFieldState extends State<CustomSearchField> {
                   value ? buildSuffixIcon() : const SizedBox(),
             ),
           ),
-          onChanged: widget.dailyOnChanged
+          onChanged: widget.delayOnChanged
               ? (value) {
                   showClearButton.value = value!.isNotEmpty;
                   debounce(() => widget.onChange!(value));
