@@ -14,7 +14,7 @@ class CustomSearchField extends StatefulWidget {
   final List<String? Function(String?)>? validators;
   final Duration duration;
   final bool dailyOnChanged;
-  final VoidCallback onClickClearIcon;
+  final VoidCallback? onClickClearIcon;
 
   const CustomSearchField({
     super.key,
@@ -26,7 +26,7 @@ class CustomSearchField extends StatefulWidget {
     this.onChange,
     this.dailyOnChanged = true,
     this.validators,
-    required this.onClickClearIcon,
+    this.onClickClearIcon,
   });
 
   @override
@@ -103,7 +103,7 @@ class _CustomSearchFieldState extends State<CustomSearchField> {
   Widget buildSuffixIcon() {
     return IconButton(
       onPressed: () {
-        widget.onClickClearIcon();
+        widget.onClickClearIcon != null ? widget.onClickClearIcon!() : null;
         textEditingController.clear();
       },
       icon: const Icon(

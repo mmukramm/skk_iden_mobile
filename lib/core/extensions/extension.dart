@@ -19,6 +19,8 @@ extension SnackBarExtension on BuildContext {
     final snackBar = SnackBar(
       content: Text(
         message,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: textTheme.bodyMedium!.copyWith(
           color: type.textColor,
         ),

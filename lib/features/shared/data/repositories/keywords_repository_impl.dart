@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:skk_iden_mobile/core/errors/failure.dart';
 import 'package:skk_iden_mobile/core/utils/api_response.dart';
 import 'package:skk_iden_mobile/core/utils/const.dart';
@@ -18,15 +17,11 @@ class KeywordsRepositoryImpl implements KeywordsRepository {
     GetAllKeywordParams getAllKeywordParams,
   ) async {
     try {
-      debugPrint('Repository : ${getAllKeywordParams.key}');
-
       final result = await keywordsDataSource.getKeywords(
         'Bearer ${CredentialSaver.accessToken}',
         getAllKeywordParams.key,
         getAllKeywordParams.page,
       );
-
-      debugPrint(result.data.toString());
 
       final keyword = Keyword.fromMap(result.data);
 
@@ -46,10 +41,10 @@ class KeywordsRepositoryImpl implements KeywordsRepository {
   }
 
   @override
-  Future<Either<Failure, String>> postKeyword(PostKeywordParams postKeywordParams) async {
+  Future<Either<Failure, String>> postKeyword(
+    PostKeywordParams postKeywordParams,
+  ) async {
     try {
-      debugPrint('Repository : ${postKeywordParams.keyword}');
-
       final result = await keywordsDataSource.addKeyword(
         'Bearer ${CredentialSaver.accessToken}',
         postKeywordParams.toJson(),
@@ -69,9 +64,11 @@ class KeywordsRepositoryImpl implements KeywordsRepository {
       return Left(ServerFailure(e.message!));
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> deleteKeyword(String id) async {
+  Future<Either<Failure, String>> deleteKeyword(
+    String id,
+  ) async {
     try {
       final result = await keywordsDataSource.deleteKeyword(
         'Bearer ${CredentialSaver.accessToken}',
