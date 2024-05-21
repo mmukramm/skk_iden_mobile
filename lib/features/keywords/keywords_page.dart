@@ -117,13 +117,7 @@ class _KeywordsPageState extends State<KeywordsPage> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    scrollController.animateTo(
-                      0,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                    );
-                  },
+                  onPressed: () => scrollToTop(),
                 ),
               ],
             ),
@@ -156,19 +150,7 @@ class _KeywordsPageState extends State<KeywordsPage> {
                     context.showAddKeywordDialog(
                       title: "Tambah Kata Kunci",
                       formKey: formKey,
-                      onTapPrimaryButton: () {
-                        if (formKey.currentState!.saveAndValidate()) {
-                          final value = formKey.currentState!.value;
-                          debugPrint(formKey.currentState!.value.toString());
-                          context.read<KeywordsCubit>().addKeyword(
-                                postKeywordParams: PostKeywordParams(
-                                  keyword: value['keyword'],
-                                  definition: value['definition'],
-                                ),
-                              );
-                          navigatorKey.currentState!.pop();
-                        }
-                      },
+                      onTapPrimaryButton: () => addKeyword(),
                     );
                   },
                   style: FilledButton.styleFrom(
@@ -185,8 +167,9 @@ class _KeywordsPageState extends State<KeywordsPage> {
                       ),
                       Text(
                         "Tambah Kata Kunci",
-                        style: textTheme.titleSmall!
-                            .copyWith(color: scaffoldColor),
+                        style: textTheme.titleSmall!.copyWith(
+                          color: scaffoldColor,
+                        ),
                       ),
                     ],
                   ),
@@ -200,14 +183,13 @@ class _KeywordsPageState extends State<KeywordsPage> {
                 hintText: "Cari kata kunci...",
                 onChange: (value) {
                   currentPage = 1;
-                  debugPrint(value);
                   keywords.clear();
                   key = value!;
-                  context
-                      .read<KeywordsCubit>()
-                      .getKeywords(page: currentPage, key: value);
+                  context.read<KeywordsCubit>().getKeywords(
+                        page: currentPage,
+                        key: value,
+                      );
                 },
-                onClickClearIcon: () {},
               ),
               const SizedBox(
                 height: 24,
@@ -256,9 +238,8 @@ class _KeywordsPageState extends State<KeywordsPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: keywords.length,
                     itemBuilder: (_, index) {
-                      return buildKeywordItemCard(
+                      return KeywordItem(
                         item: keywords[index],
-                        buildContext: context,
                       );
                     },
                   );
@@ -285,127 +266,24 @@ class _KeywordsPageState extends State<KeywordsPage> {
     );
   }
 
-  Widget buildKeywordItemCard({
-    required KeywordData item,
-    required BuildContext buildContext,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: primaryBackgroundColor,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            item.keyword?.trim() ?? "",
-            maxLines: 2,
-            style: textTheme.titleLarge!.copyWith(color: primaryColor),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            item.definition?.trim() ?? "",
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: textTheme.bodyMedium!.copyWith(color: primaryColor),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            children: [
-              SvgPicture.asset(
-                width: 32,
-                height: 32,
-                AssetPath.getIcon("user.svg"),
-                colorFilter: const ColorFilter.mode(
-                  primaryColor,
-                  BlendMode.srcIn,
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(item.user ?? ""),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            children: [
-              SvgPicture.asset(
-                width: 32,
-                height: 32,
-                AssetPath.getIcon("calendar.svg"),
-                colorFilter: const ColorFilter.mode(
-                  primaryColor,
-                  BlendMode.srcIn,
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(item.createdAt ?? ""),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: () {
-                    context.showConfirmationDialog(
-                      title: "Hapus Kata Kunci",
-                      message:
-                          "Apakah Anda yakin ingin menghapus kata kunci ini?",
-                      onTapPrimaryButton: () {
-                        context
-                            .read<KeywordsCubit>()
-                            .removeKeyword(id: item.keywordId!);
-                        navigatorKey.currentState!.pop();
-                      },
-                    );
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: dangerColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: SvgPicture.asset(
-                    AssetPath.getIcon("trash.svg"),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              Expanded(
-                child: FilledButton(
-                  onPressed: () {},
-                  style: FilledButton.styleFrom(
-                    backgroundColor: infoColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: SvgPicture.asset(
-                    AssetPath.getIcon("eye_open.svg"),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+  void addKeyword() {
+    if (formKey.currentState!.saveAndValidate()) {
+      final value = formKey.currentState!.value;
+      context.read<KeywordsCubit>().addKeyword(
+            postKeywordParams: PostKeywordParams(
+              keyword: value['keyword'],
+              definition: value['definition'],
+            ),
+          );
+      navigatorKey.currentState!.pop();
+    }
+  }
+
+  void scrollToTop() {
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeIn,
     );
   }
 }
@@ -498,9 +376,10 @@ class KeywordItem extends StatelessWidget {
                       message:
                           "Apakah Anda yakin ingin menghapus kata kunci ini?",
                       onTapPrimaryButton: () {
-                        context
-                            .read<KeywordsCubit>()
-                            .deleteKeyword(item.keywordId!);
+                        context.read<KeywordsCubit>().removeKeyword(
+                              id: item.keywordId!,
+                            );
+                        navigatorKey.currentState!.pop();
                       },
                     );
                   },

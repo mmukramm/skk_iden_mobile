@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/state/keywords_state.dart';
 import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
@@ -20,8 +19,6 @@ class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
     String key = "",
   }) async {
     emit(KeywordsState.inProgress());
-
-    debugPrint('Cubiiiiiit : $key');
 
     final result = await getAllKeyword(
       GetAllKeywordParams(
