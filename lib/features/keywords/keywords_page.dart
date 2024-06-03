@@ -15,6 +15,7 @@ import 'package:skk_iden_mobile/features/shared/data/models/keyword.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword_data.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_search_field.dart';
 import 'package:skk_iden_mobile/features/shared/widget/loading.dart';
+import 'package:skk_iden_mobile/features/shared/widget/no_data_found.dart';
 
 class KeywordsPage extends StatefulWidget {
   const KeywordsPage({super.key});
@@ -224,6 +225,14 @@ class _KeywordsPageState extends State<KeywordsPage> {
                     );
                   }
 
+                  if (state.isEmpty) {
+                    return const Center(
+                      child: NoDataFound(
+                        message: "Data tidak ditemukan",
+                      ),
+                    );
+                  }
+
                   if (state.isSuccess) {
                     final fetchedKeywords = state.data!;
 
@@ -296,7 +305,6 @@ class _KeywordsPageState extends State<KeywordsPage> {
       curve: Curves.easeIn,
     );
   }
-  
 }
 
 class KeywordItem extends StatelessWidget {

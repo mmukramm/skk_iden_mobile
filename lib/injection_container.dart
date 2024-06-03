@@ -19,6 +19,7 @@ import 'package:skk_iden_mobile/features/shared/data/repositories/keywords_repos
 import 'package:skk_iden_mobile/features/shared/domain/repositories/keywords_repository.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/delete_keyword.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/get_all_keyword.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/get_keyword_detail.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/post_keyword.dart';
 
 final getIt = GetIt.instance;
@@ -45,6 +46,7 @@ void initBlocs() {
       ));
   getIt.registerFactory(() => HomeCubit(
         getIt(),
+        getIt(),
       ));
 }
 
@@ -56,6 +58,7 @@ void initUseCases() {
   getIt.registerLazySingleton(() => GetAllKeyword(getIt()));
   getIt.registerLazySingleton(() => PostKeyword(getIt()));
   getIt.registerLazySingleton(() => DeleteKeyword(getIt()));
+  getIt.registerLazySingleton(() => GetKeywordDetail(getIt()));
 }
 
 void initRepositories() {

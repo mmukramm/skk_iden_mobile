@@ -29,7 +29,9 @@ class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
 
     result.fold(
       (l) => emit(KeywordsState.failure(l.message)),
-      (r) => emit(KeywordsState.success(data: r)),
+      (r) => r.keywordData!.isEmpty
+          ? emit(KeywordsState.empty())
+          : emit(KeywordsState.success(data: r)),
     );
   }
 

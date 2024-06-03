@@ -6,6 +6,7 @@ import 'package:skk_iden_mobile/core/utils/const.dart';
 import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword.dart';
+import 'package:skk_iden_mobile/features/shared/data/models/keyword_detail.dart';
 import 'package:skk_iden_mobile/features/shared/domain/repositories/keywords_repository.dart';
 
 class KeywordsRepositoryImpl implements KeywordsRepository {
@@ -76,6 +77,29 @@ class KeywordsRepositoryImpl implements KeywordsRepository {
       );
 
       return Right(result.data as String);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        return const Left(ConnectionFailure(kNoInternetConnection));
+      }
+
+      if (e.response != null) {
+        return Left(authFailureMessageHandler(
+            ApiResponse.fromJson(e.response!.data).message!));
+      }
+
+      return Left(ServerFailure(e.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, KeywordDetail>> getKeywordDetail(String id) async {
+    try {
+      final result = await keywordsDataSource.getKeywordDetail(
+        'Bearer ${CredentialSaver.accessToken}',
+        id,
+      );
+
+      return Right(KeywordDetail.fromMap(result.data));
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
         return const Left(ConnectionFailure(kNoInternetConnection));

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "811256303751",
+    "project_id": "skk-iden-app",
+    "storage_bucket": "skk-iden-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811256303751:android:ff3794d5b7f24a71116822",
+        "android_client_info": {
+          "package_name": "com.example.skk_iden_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9kAj4TV2HqfBGHBl13RMJtFu0c5WN4ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

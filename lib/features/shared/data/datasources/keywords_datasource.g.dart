@@ -90,7 +90,7 @@ class _KeywordsDataSource implements KeywordsDataSource {
   @override
   Future<ApiResponse> deleteKeyword(
     String accessToken,
-    String param,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -105,7 +105,38 @@ class _KeywordsDataSource implements KeywordsDataSource {
     )
             .compose(
               _dio.options,
-              '/api/keywords/${param}',
+              '/api/keywords/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ApiResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ApiResponse> getKeywordDetail(
+    String accessToken,
+    String id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/keywords/detail/${id}',
               queryParameters: queryParameters,
               data: _data,
             )

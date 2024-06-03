@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:skk_iden_mobile/core/helper/asset_helper.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
+import 'package:skk_iden_mobile/core/utils/date_formatter.dart';
 import 'package:skk_iden_mobile/features/home/bloc/home_cubit.dart';
 import 'package:skk_iden_mobile/features/home/bloc/state/home_state.dart';
+import 'package:skk_iden_mobile/features/shared/data/models/definition_detail.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword_data.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_search_field.dart';
-import 'package:skk_iden_mobile/features/shared/widget/custom_text_field.dart';
 import 'package:skk_iden_mobile/features/shared/widget/loading.dart';
+import 'package:skk_iden_mobile/features/shared/widget/no_data_found.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,6 +24,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final List<KeywordData> keywords;
   late final HomeCubit homeCubit;
+  late ValueNotifier<bool> isRetryVisible;
+  late ValueNotifier<bool> showLoadMoreLoading;
   late String key;
   late int currentPage;
   int? totalPage;
@@ -32,6 +38,8 @@ class _HomePageState extends State<HomePage> {
 
     keywords = List.empty(growable: true);
     key = '';
+    showLoadMoreLoading = ValueNotifier(false);
+    isRetryVisible = ValueNotifier(false);
     currentPage = 1;
     homeCubit = context.read<HomeCubit>();
   }
@@ -78,6 +86,10 @@ class _HomePageState extends State<HomePage> {
                   key: key,
                 );
               },
+              onClickClearIcon: () {
+                nextPage = null;
+                previousPage = null;
+              },
             ),
           ),
           const SizedBox(
@@ -86,7 +98,23 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
             child: BlocConsumer<HomeCubit, HomeState>(
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state.isSuccess) {
+                  final fetchedKeywords = state.data! as Keyword;
+
+                  totalPage = fetchedKeywords.pagination!.totalPage;
+                  previousPage = fetchedKeywords.pagination!.prevPage;
+                  nextPage = fetchedKeywords.pagination!.nextPage;
+
+                  showLoadMoreLoading.value = false;
+                }
+
+                isRetryVisible.value = nextPage != null && state.isSuccess;
+
+                if (state.isInitial || key.isEmpty) {
+                  isRetryVisible.value = false;
+                }
+              },
               builder: (context, state) {
                 if (state.isInitial || key.isEmpty) {
                   return const SizedBox();
@@ -97,15 +125,13 @@ class _HomePageState extends State<HomePage> {
                 }
 
                 if (state.isEmpty) {
-                  return const Text("No Data Found");
+                  return const NoDataFound(
+                    message: "Data tidak ditemukan",
+                  );
                 }
 
                 if (state.isSuccess) {
                   final fetchedKeywords = state.data! as Keyword;
-
-                  totalPage = fetchedKeywords.pagination!.totalPage;
-                  previousPage = fetchedKeywords.pagination!.prevPage;
-                  nextPage = fetchedKeywords.pagination!.nextPage;
 
                   keywords.addAll(fetchedKeywords.keywordData!);
                 }
@@ -117,37 +143,180 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(12),
                     color: primaryBackgroundColor,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Hasil Pencarian",
-                        style: textTheme.titleMedium!.copyWith(
-                          color: primaryColor,
+                  child: state.isDetail
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                keywords.clear();
+                                currentPage = 1;
+                                nextPage = null;
+                                previousPage = null;
+                                homeCubit.getKeywords(
+                                  page: currentPage,
+                                  key: key,
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: primaryColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    state.data.keyword,
+                                    style: textTheme.titleLarge!.copyWith(
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Dibuat pada: ${formatDateTime(state.data.definition[0].createdAt)}",
+                                    style: textTheme.bodyMedium!
+                                        .copyWith(color: Colors.grey),
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  Text(
+                                    state.data.definition[0].definition.trim(),
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  const Divider(),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Text(
+                                    'Riwayat',
+                                    style: textTheme.titleLarge,
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final data = state.data.definition
+                                          as List<DefinitionDetail>;
+                                      debugPrint(data[0].definition);
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            formatDateTime(
+                                              data[index].createdAt!,
+                                            ),
+                                            style: textTheme.titleSmall,
+                                          ),
+                                          Text(data[index].definition!.trim()),
+                                        ],
+                                      );
+                                    },
+                                    separatorBuilder: (_, __) => const SizedBox(
+                                      height: 12,
+                                    ),
+                                    itemCount: state.data.definition.length,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Hasil Pencarian",
+                              style: textTheme.titleMedium!.copyWith(
+                                color: primaryColor,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: keywords.length,
+                              itemBuilder: (_, index) {
+                                final keywordData = keywords[index];
+                                return KeywordItem(
+                                  keyword: keywordData.keyword ?? "",
+                                  onTap: () {
+                                    debugPrint("awooo $keywordData");
+                                    homeCubit.getOneKeywordDetail(
+                                      id: keywordData.keywordId!,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: keywords.length,
-                        itemBuilder: (_, index) {
-                          return KeywordItem(
-                            keyword: keywords[index].keyword ?? "",
-                            onTap: () {
-                              debugPrint("awooo ${keywords[index]}");
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
                 );
               },
             ),
-          )
+          ),
+          ValueListenableBuilder(
+            valueListenable: showLoadMoreLoading,
+            builder: (context, value, child) {
+              return Visibility(
+                visible: value,
+                child: const Loading(
+                  color: primaryColor,
+                ),
+              );
+            },
+          ),
+          ValueListenableBuilder(
+            valueListenable: isRetryVisible,
+            builder: (_, value, __) {
+              return Visibility(
+                visible: value,
+                child: Column(
+                  children: [
+                    IconButton(
+                      icon: SvgPicture.asset(
+                        AssetPath.getIcon("retry.svg"),
+                        colorFilter: const ColorFilter.mode(
+                          primaryBackgroundColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      style:
+                          IconButton.styleFrom(backgroundColor: primaryColor),
+                      onPressed: () {
+                        showLoadMoreLoading.value = true;
+                        currentPage++;
+                        homeCubit.getMoreKeywords(
+                          page: currentPage,
+                          key: key,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Text("Load More"),
+                  ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            height: 12,
+          ),
         ],
       ),
     );

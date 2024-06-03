@@ -72,7 +72,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
                   onPressed: () {
                     isVisible.value = !value;
                   },
-                  icon: SvgPicture.asset(
+                  icon: SvgPicture.asset( 
                     value
                         ? AssetPath.getIcon("eye_close.svg")
                         : AssetPath.getIcon("eye_open.svg"),

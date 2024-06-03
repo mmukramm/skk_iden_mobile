@@ -37,7 +37,7 @@ class HomeState<T> {
       HomeState(isSuccess: true, data: data);
 
   factory HomeState.detail({required T data}) =>
-      HomeState(isSuccess: true, data: data);
+      HomeState(isDetail: true, data: data);
 
   factory HomeState.onLoadmore() => const HomeState(
         isOnLoadmore: true,

@@ -24,7 +24,6 @@ class CustomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      
       elevation: 0,
       clipBehavior: Clip.hardEdge,
       backgroundColor: scaffoldColor,

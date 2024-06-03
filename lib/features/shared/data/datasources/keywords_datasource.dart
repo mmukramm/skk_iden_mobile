@@ -27,7 +27,13 @@ abstract class KeywordsDataSource {
   @DELETE('/api/keywords/{id}')
   Future<ApiResponse> deleteKeyword(
     @Header('Authorization') String accessToken,
-    @Path('id') String param,
+    @Path('id') String id,
+  );
+  
+  @GET('/api/keywords/detail/{id}')
+  Future<ApiResponse> getKeywordDetail(
+    @Header('Authorization') String accessToken,
+    @Path('id') String id,
   );
 }
 

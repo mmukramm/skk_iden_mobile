@@ -45,6 +45,9 @@ dependencies:
   get_it: ^7.7.0
   shared_preferences: ^2.2.3
   loading_animation_widget: ^1.2.1
+  firebase_messaging: ^14.9.3
+  firebase_core: ^2.31.1
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +81,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/icons/
+    - assets/illustration/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
