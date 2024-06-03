@@ -5,8 +5,9 @@ import 'package:skk_iden_mobile/core/enums/snack_bar_type.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
+import 'package:skk_iden_mobile/features/shared/widget/custom_user_form_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_confirmation_dialog.dart';
-import 'package:skk_iden_mobile/features/shared/widget/custom_dialog.dart';
+import 'package:skk_iden_mobile/features/shared/widget/custom_add_keyword_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/loading.dart';
 
 extension SnackBarExtension on BuildContext {
@@ -45,22 +46,6 @@ extension CustomDialogExtension on BuildContext {
     );
   }
 
-  Future<Object?> showAddKeywordDialog({
-    required String title,
-    required VoidCallback onTapPrimaryButton,
-    required GlobalKey<FormBuilderState> formKey,
-  }) {
-    return showDialog(
-      context: this,
-      barrierDismissible: false,
-      builder: (context) => CustomDialog(
-        title: title,
-        onTapPrimaryButton: onTapPrimaryButton,
-        formKey: formKey,
-      ),
-    );
-  }
-
   Future<Object?> showConfirmationDialog({
     required String title,
     required String message,
@@ -71,6 +56,50 @@ extension CustomDialogExtension on BuildContext {
       builder: (_) => CustomConfirmationDialog(
         title: title,
         message: message,
+        onTapPrimaryButton: onTapPrimaryButton,
+      ),
+    );
+  }
+
+  Future<Object?> showAddKeywordDialog({
+    required String title,
+    required VoidCallback onTapPrimaryButton,
+    required GlobalKey<FormBuilderState> formKey,
+  }) {
+    return showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (context) => CustomAddKeywordDialog(
+        title: title,
+        onTapPrimaryButton: onTapPrimaryButton,
+        formKey: formKey,
+      ),
+    );
+  }
+
+  Future<Object?> showAddUserDialog({
+    required String title,
+    required VoidCallback onTapPrimaryButton,
+  }) {
+    return showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (context) => CustomUserFormDialog(
+        title: title,
+        onTapPrimaryButton: onTapPrimaryButton,
+      ),
+    );
+  }
+  
+  Future<Object?> showEditUserDialog({
+    required String title,
+    required VoidCallback onTapPrimaryButton,
+  }) {
+    return showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (context) => CustomUserFormDialog(
+        title: title,
         onTapPrimaryButton: onTapPrimaryButton,
       ),
     );

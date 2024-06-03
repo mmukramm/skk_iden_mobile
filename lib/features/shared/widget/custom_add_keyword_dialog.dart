@@ -9,12 +9,12 @@ import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_text_field.dart';
 
-class CustomDialog extends StatelessWidget {
+class CustomAddKeywordDialog extends StatelessWidget {
   final String title;
   final VoidCallback onTapPrimaryButton;
   final GlobalKey<FormBuilderState> formKey;
 
-  const CustomDialog({
+  const CustomAddKeywordDialog({
     super.key,
     required this.title,
     required this.onTapPrimaryButton,

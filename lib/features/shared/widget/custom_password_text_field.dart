@@ -9,6 +9,7 @@ import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 class CustomPasswordTextField extends StatefulWidget {
   final String name, labelText, hintText;
   final TextAlign labelTextAlign;
+  final Function(String?)? onChange;
   final List<String? Function(String?)>? validators;
 
   const CustomPasswordTextField({
@@ -16,6 +17,7 @@ class CustomPasswordTextField extends StatefulWidget {
     required this.name,
     required this.labelText,
     required this.hintText,
+    this.onChange,
     this.labelTextAlign = TextAlign.start,
     this.validators,
   });
@@ -59,6 +61,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
             return FormBuilderTextField(
               name: widget.name,
               obscureText: value,
+              onChanged: widget.onChange,
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 hintStyle: textTheme.bodyLarge!.copyWith(
@@ -72,7 +75,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
                   onPressed: () {
                     isVisible.value = !value;
                   },
-                  icon: SvgPicture.asset( 
+                  icon: SvgPicture.asset(
                     value
                         ? AssetPath.getIcon("eye_close.svg")
                         : AssetPath.getIcon("eye_open.svg"),
