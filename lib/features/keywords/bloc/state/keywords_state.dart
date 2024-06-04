@@ -21,7 +21,6 @@ class KeywordsState<T> {
 
   factory KeywordsState.initial() => const KeywordsState();
 
- 
   factory KeywordsState.inProgress() => const KeywordsState(isInProgress: true);
 
   factory KeywordsState.failure(String? message) =>
@@ -32,7 +31,7 @@ class KeywordsState<T> {
   factory KeywordsState.success({required T data}) =>
       KeywordsState(isSuccess: true, data: data);
 
- factory KeywordsState.onLoadmore() => const KeywordsState(
+  factory KeywordsState.onLoadmore() => const KeywordsState(
         isOnLoadmore: true,
       );
 

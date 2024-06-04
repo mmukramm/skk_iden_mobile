@@ -13,7 +13,7 @@ import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cu
 import 'package:skk_iden_mobile/features/auth/presentation/pages/login_page.dart';
 import 'package:skk_iden_mobile/features/home/home_page.dart';
 import 'package:skk_iden_mobile/features/keywords/keywords_page.dart';
-import 'package:skk_iden_mobile/features/users/users_page.dart';
+import 'package:skk_iden_mobile/features/users/presentation/users_page.dart';
 
 class SkkIden extends StatefulWidget {
   const SkkIden({super.key});

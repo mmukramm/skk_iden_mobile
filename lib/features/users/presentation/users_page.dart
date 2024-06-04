@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skk_iden_mobile/core/extensions/extension.dart';
 import 'package:skk_iden_mobile/core/helper/asset_helper.dart';
+import 'package:skk_iden_mobile/core/state/data_state.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
+import 'package:skk_iden_mobile/core/utils/date_formatter.dart';
+import 'package:skk_iden_mobile/features/shared/widget/loading.dart';
+import 'package:skk_iden_mobile/features/users/data/models/user_model.dart';
+import 'package:skk_iden_mobile/features/users/presentation/bloc/users_cubit.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -15,6 +21,15 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   final formKey = GlobalKey<FormBuilderState>();
+  late final UsersCubit usersCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    usersCubit = context.read<UsersCubit>();
+    usersCubit.getListUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,12 +85,26 @@ class _UsersPageState extends State<UsersPage> {
               const SizedBox(
                 height: 20,
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 3,
-                itemBuilder: (_, index) {
-                  return AdminItem();
+              BlocConsumer<UsersCubit, DataState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state.isInProgress) {
+                    return const Loading(
+                      color: primaryColor,
+                    );
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.data.length,
+                    itemBuilder: (_, index) {
+                      final user = UserModel.fromMap(state.data[index]);
+                      return AdminItem(
+                        userModel: user,
+                      );
+                    },
+                  );
                 },
               ),
             ],
@@ -87,8 +116,10 @@ class _UsersPageState extends State<UsersPage> {
 }
 
 class AdminItem extends StatelessWidget {
+  final UserModel? userModel;
   const AdminItem({
     super.key,
+    this.userModel,
   });
 
   @override
@@ -105,7 +136,7 @@ class AdminItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Muhammad Kamaraddin Dibiadzah",
+            userModel?.name ?? "",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: textTheme.titleLarge!.copyWith(color: primaryColor),
@@ -114,9 +145,7 @@ class AdminItem extends StatelessWidget {
             height: 8,
           ),
           Text(
-            "kmrdn",
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            userModel?.username ?? '',
             style: textTheme.bodyMedium!.copyWith(color: primaryColor),
           ),
           const SizedBox(
@@ -136,7 +165,7 @@ class AdminItem extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              Text("Admin"),
+              Text(userModel!.isAdmin ? 'Admin' : 'User'),
             ],
           ),
           const SizedBox(
@@ -156,7 +185,9 @@ class AdminItem extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              Text("DD MM YYYY"),
+              Text(
+                formatDateTime(userModel!.createdAt),
+              ),
             ],
           ),
           const SizedBox(

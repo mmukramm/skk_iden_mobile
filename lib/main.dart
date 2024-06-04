@@ -6,6 +6,7 @@ import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
 import 'package:skk_iden_mobile/features/home/bloc/home_cubit.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/keywords_cubit.dart';
+import 'package:skk_iden_mobile/features/users/presentation/bloc/users_cubit.dart';
 import 'package:skk_iden_mobile/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -57,6 +58,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => getIt<HomeCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<UsersCubit>(),
         ),
       ],
       child: MaterialApp(
