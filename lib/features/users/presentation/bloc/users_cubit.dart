@@ -28,7 +28,7 @@ class UsersCubit extends Cubit<DataState> {
         DataState.failure(l.message),
       ),
       (r) => emit(
-        DataState.success(data: r.data),
+        DataState.success(data: r),
       ),
     );
   }
@@ -41,7 +41,7 @@ class UsersCubit extends Cubit<DataState> {
 
     result.fold(
       (l) => emit(DataState.failure(l.message)),
-      (r) => emit(DataState.success(data: r.data)),
+      (r) => emit(DataState.mutateDataSuccess(message: r)),
     );
   }
 
@@ -53,7 +53,7 @@ class UsersCubit extends Cubit<DataState> {
 
     result.fold(
       (l) => emit(DataState.failure(l.message)),
-      (r) => emit(DataState.success(data: r.data)),
+      (r) => emit(DataState.mutateDataSuccess(message: r)),
     );
   }
 
@@ -65,7 +65,7 @@ class UsersCubit extends Cubit<DataState> {
 
     result.fold(
       (l) => emit(DataState.failure(l.message)),
-      (r) => emit(DataState.success(data: r.data)),
+      (r) => emit(DataState.mutateDataSuccess(message: r)),
     );
   }
 }

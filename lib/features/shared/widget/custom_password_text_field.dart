@@ -65,7 +65,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 hintStyle: textTheme.bodyLarge!.copyWith(
-                  color: secondaryColor,
+                  color: Colors.grey,
                 ),
                 contentPadding: const EdgeInsets.all(12),
                 border: OutlineInputBorder(

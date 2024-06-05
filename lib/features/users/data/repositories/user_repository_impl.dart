@@ -5,6 +5,7 @@ import 'package:skk_iden_mobile/core/utils/api_response.dart';
 import 'package:skk_iden_mobile/core/utils/const.dart';
 import 'package:skk_iden_mobile/core/utils/credential_saver.dart';
 import 'package:skk_iden_mobile/features/users/data/datasources/user_datasource.dart';
+import 'package:skk_iden_mobile/features/users/data/models/user_model.dart';
 import 'package:skk_iden_mobile/features/users/domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -15,12 +16,18 @@ class UserRepositoryImpl implements UserRepository {
   });
 
   @override
-  Future<Either<Failure, ApiResponse>> getAllUsers() async {
+  Future<Either<Failure, List<UserModel>>> getAllUsers() async {
     try {
       final result = await userDataSource
           .getAllUsers('Bearer ${CredentialSaver.accessToken}');
 
-      return Right(result);
+      final users = List<UserModel>.from(
+        (result.data as List<dynamic>).map<UserModel>(
+          (e) => UserModel.fromMap(e as Map<String, dynamic>),
+        ),
+      );
+
+      return Right(users);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
         return const Left(ConnectionFailure(kNoInternetConnection));
@@ -35,14 +42,14 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, ApiResponse>> deleteUser(String id) async {
+  Future<Either<Failure, String>> deleteUser(String id) async {
     try {
       final result = await userDataSource.deleteUser(
         'Bearer ${CredentialSaver.accessToken}',
         id,
       );
 
-      return Right(result);
+      return Right(result.data as String);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
         return const Left(ConnectionFailure(kNoInternetConnection));
@@ -59,14 +66,14 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, ApiResponse>> addUser(PostUserParams params) async {
+  Future<Either<Failure, String>> addUser(PostUserParams params) async {
     try {
       final result = await userDataSource.addUser(
         'Bearer ${CredentialSaver.accessToken}',
         params.toMap(),
       );
 
-      return Right(result);
+      return Right(result.data as String);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
         return const Left(ConnectionFailure(kNoInternetConnection));
@@ -83,7 +90,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, ApiResponse>> editUser(
+  Future<Either<Failure, String>> editUser(
     PostUserParams postUserParams,
   ) async {
     try {
@@ -93,7 +100,7 @@ class UserRepositoryImpl implements UserRepository {
         postUserParams.toMap(),
       );
 
-      return Right(result);
+      return Right(result.data as String);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
         return const Left(ConnectionFailure(kNoInternetConnection));

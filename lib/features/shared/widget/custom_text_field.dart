@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 
 class CustomTextField extends StatelessWidget {
   final String name, hintText;
   final String? labelText;
   final int maxLines;
+  final String? initialValue;
   final TextAlign labelTextAlign;
   final List<String? Function(String?)>? validators;
 
@@ -17,6 +17,7 @@ class CustomTextField extends StatelessWidget {
     this.labelText,
     this.maxLines = 1,
     required this.hintText,
+    this.initialValue,
     this.labelTextAlign = TextAlign.start,
     this.validators,
   });
@@ -40,7 +41,7 @@ class CustomTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: textTheme.bodyLarge!.copyWith(
-              color: secondaryColor,
+              color: Colors.grey,
             ),
             contentPadding: const EdgeInsets.all(12),
             border: OutlineInputBorder(
@@ -48,6 +49,7 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
           maxLines: maxLines,
+          initialValue: initialValue,
           validator: validators != null
               ? FormBuilderValidators.compose(validators!)
               : null,

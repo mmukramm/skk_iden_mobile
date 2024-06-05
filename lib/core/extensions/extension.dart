@@ -9,6 +9,7 @@ import 'package:skk_iden_mobile/features/shared/widget/custom_user_form_dialog.d
 import 'package:skk_iden_mobile/features/shared/widget/custom_confirmation_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_add_keyword_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/loading.dart';
+import 'package:skk_iden_mobile/features/users/data/models/user_model.dart';
 
 extension SnackBarExtension on BuildContext {
   showSnackBar({
@@ -80,26 +81,32 @@ extension CustomDialogExtension on BuildContext {
   Future<Object?> showAddUserDialog({
     required String title,
     required VoidCallback onTapPrimaryButton,
+    required GlobalKey<FormBuilderState> formKey,
   }) {
     return showDialog(
       context: this,
       barrierDismissible: false,
       builder: (context) => CustomUserFormDialog(
         title: title,
+        formKey: formKey,
         onTapPrimaryButton: onTapPrimaryButton,
       ),
     );
   }
-  
+
   Future<Object?> showEditUserDialog({
     required String title,
+    required UserModel userModel,
     required VoidCallback onTapPrimaryButton,
+    required GlobalKey<FormBuilderState> formKey,
   }) {
     return showDialog(
       context: this,
       barrierDismissible: false,
       builder: (context) => CustomUserFormDialog(
         title: title,
+        formKey: formKey,
+        userModel: userModel,
         onTapPrimaryButton: onTapPrimaryButton,
       ),
     );

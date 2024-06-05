@@ -39,14 +39,14 @@ class PostUserParams {
   final String? id;
   final String name;
   final String username;
-  final String password;
+  final String? password;
   final bool isAdmin;
   PostUserParams({
     this.id,
     required this.name,
     required this.username,
-    required this.password,
     required this.isAdmin,
+    this.password,
   });
 
   Map<String, dynamic> toMap() {
@@ -55,6 +55,6 @@ class PostUserParams {
       'username': username,
       'password': password,
       'is_admin': isAdmin,
-    };
+    }..removeWhere((key, value) => value == null);
   }
 }

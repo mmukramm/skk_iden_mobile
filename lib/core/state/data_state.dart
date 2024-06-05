@@ -2,6 +2,7 @@ class DataState<T> {
   final bool isInProgress;
   final bool isFailure;
   final bool isSuccess;
+  final bool isMutateDataSuccess;
   final bool isEmpty;
   final String? message;
   final T? data;
@@ -10,6 +11,7 @@ class DataState<T> {
     this.isInProgress = false,
     this.isFailure = false,
     this.isSuccess = false,
+    this.isMutateDataSuccess = false,
     this.isEmpty = false,
     this.message = "",
     this.data,
@@ -24,5 +26,8 @@ class DataState<T> {
 
   factory DataState.empty() => const DataState(isEmpty: true);
 
-  factory DataState.success({required T data}) => DataState(isSuccess: true, data: data);
+  factory DataState.success({required T data}) =>
+      DataState(isSuccess: true, data: data);
+  factory DataState.mutateDataSuccess({required String message}) =>
+      DataState(isMutateDataSuccess: true, message: message);
 }

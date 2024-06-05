@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:skk_iden_mobile/core/enums/role_type.dart';
 
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_password_text_field.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_text_field.dart';
+import 'package:skk_iden_mobile/features/users/data/models/user_model.dart';
 
 class CustomUserFormDialog extends StatefulWidget {
   final String title;
+  final GlobalKey<FormBuilderState> formKey;
+  final UserModel? userModel;
   final VoidCallback onTapPrimaryButton;
 
   const CustomUserFormDialog({
     super.key,
     required this.title,
+    required this.formKey,
     required this.onTapPrimaryButton,
+    this.userModel,
   });
 
   @override
@@ -23,14 +30,23 @@ class CustomUserFormDialog extends StatefulWidget {
 }
 
 class _CustomUserFormDialogState extends State<CustomUserFormDialog> {
-  final formKey = GlobalKey<FormBuilderState>();
   late final ValueNotifier<bool> isConfirmPasswordSame;
+  late final ValueNotifier<bool> showPasswordForm;
+  late final ValueNotifier<RoleType?> roleDropdownValue;
+
   late String password;
 
   @override
   void initState() {
     super.initState();
     isConfirmPasswordSame = ValueNotifier(true);
+    showPasswordForm = ValueNotifier(widget.userModel == null);
+    roleDropdownValue = ValueNotifier(widget.userModel == null
+        ? null
+        : widget.userModel!.isAdmin
+            ? RoleType.admin
+            : RoleType.user);
+
     password = '';
   }
 
@@ -49,6 +65,7 @@ class _CustomUserFormDialogState extends State<CustomUserFormDialog> {
       ),
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: const BoxDecoration(
@@ -87,13 +104,15 @@ class _CustomUserFormDialogState extends State<CustomUserFormDialog> {
               child: Column(
                 children: [
                   FormBuilder(
-                    key: formKey,
+                    key: widget.formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomTextField(
                           name: "fullname",
                           labelText: "Nama",
                           hintText: "Masukkan nama",
+                          initialValue: widget.userModel?.name,
                           validators: [
                             FormBuilderValidators.required(
                               errorText: "Bagian ini harus diisi",
@@ -106,6 +125,7 @@ class _CustomUserFormDialogState extends State<CustomUserFormDialog> {
                         CustomTextField(
                           name: "username",
                           labelText: "Username",
+                          initialValue: widget.userModel?.username,
                           hintText: "Masukkan username",
                           validators: [
                             FormBuilderValidators.required(
@@ -116,64 +136,142 @@ class _CustomUserFormDialogState extends State<CustomUserFormDialog> {
                         const SizedBox(
                           height: 12,
                         ),
-                        CustomTextField(
-                          name: "role",
-                          labelText: "Role",
-                          hintText: "Pilih Role",
-                          validators: [
-                            FormBuilderValidators.required(
-                              errorText: "Bagian ini harus diisi",
-                            )
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Role',
+                              style: textTheme.titleMedium,
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            FormBuilderDropdown<RoleType>(
+                              name: 'role',
+                              dropdownColor: primaryBackgroundColor,
+                              borderRadius: BorderRadius.circular(12),
+                              style: textTheme.bodyLarge,
+                              initialValue: widget.userModel == null
+                                  ? null
+                                  : widget.userModel!.isAdmin
+                                      ? RoleType.admin
+                                      : RoleType.user,
+                              elevation: 0,
+                              isDense: true,
+                              decoration: InputDecoration(
+                                hintText: 'Pilih role',
+                                hintStyle: textTheme.bodyLarge!.copyWith(
+                                  color: Colors.grey,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                contentPadding: const EdgeInsets.all(12),
+                              ),
+                              isExpanded: true,
+                              items: const [
+                                DropdownMenuItem<RoleType>(
+                                  value: RoleType.admin,
+                                  child: Text('Admin'),
+                                ),
+                                DropdownMenuItem<RoleType>(
+                                  value: RoleType.user,
+                                  child: Text('User'),
+                                ),
+                              ],
+                              onChanged: (result) {
+                                roleDropdownValue.value = result;
+                              },
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(
+                                    errorText: 'Role belum dipilih')
+                              ]),
+                            ),
                           ],
                         ),
                         const SizedBox(
-                          height: 12,
+                          height: 4,
                         ),
-                        CustomPasswordTextField(
-                          name: 'password',
-                          labelText: 'Password',
-                          hintText: '******',
-                          onChange: (result) {
-                            password = result!;
-                          },
-                          validators: [
-                            FormBuilderValidators.required(
-                              errorText: "Bagian ini harus diisi",
-                            )
-                          ],
-                        ),
+                        if (widget.userModel != null)
+                          FilledButton(
+                            onPressed: () {
+                              showPasswordForm.value = !showPasswordForm.value;
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: primaryColor,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(8),
+                            ),
+                            child: const Text('Ubah Password'),
+                          ),
                         const SizedBox(
-                          height: 12,
+                          height: 4,
                         ),
                         ValueListenableBuilder(
-                          valueListenable: isConfirmPasswordSame,
+                          valueListenable: showPasswordForm,
                           builder: (context, value, _) {
-                            return Column(
-                              children: [
-                                CustomPasswordTextField(
-                                  name: 'confirmPassword',
-                                  labelText: 'Konfirmasi Password',
-                                  hintText: '******',
-                                  onChange: (result) {
-                                    isConfirmPasswordSame.value =
-                                        password == result;
-                                    debugPrint(value.toString());
-                                  },
-                                  validators: [
-                                    FormBuilderValidators.required(
-                                      errorText: "Bagian ini harus diisi",
-                                    )
-                                  ],
-                                ),
-                                if (!value)
-                                  Text(
-                                    'Password dan Konfirmasi password tidak sama',
-                                    style: textTheme.bodySmall!.copyWith(
-                                      color: dangerColor,
-                                    ),
-                                  ),
-                              ],
-                            );
+                            return value
+                                ? Column(
+                                    children: [
+                                      CustomPasswordTextField(
+                                        name: 'password',
+                                        labelText: 'Password',
+                                        hintText: '******',
+                                        onChange: (result) {
+                                          password = result!;
+                                        },
+                                        validators: [
+                                          FormBuilderValidators.required(
+                                            errorText: "Bagian ini harus diisi",
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      ValueListenableBuilder(
+                                        valueListenable: isConfirmPasswordSame,
+                                        builder: (context, value, _) {
+                                          return Column(
+                                            children: [
+                                              CustomPasswordTextField(
+                                                name: 'confirmPassword',
+                                                labelText:
+                                                    'Konfirmasi Password',
+                                                hintText: '******',
+                                                onChange: (result) {
+                                                  isConfirmPasswordSame.value =
+                                                      password == result;
+                                                  debugPrint(value.toString());
+                                                },
+                                                validators: [
+                                                  FormBuilderValidators
+                                                      .required(
+                                                    errorText:
+                                                        "Bagian ini harus diisi",
+                                                  ),
+                                                ],
+                                              ),
+                                              if (!value)
+                                                Text(
+                                                  'Password dan Konfirmasi password tidak sama',
+                                                  style: textTheme.bodySmall!
+                                                      .copyWith(
+                                                    color: dangerColor,
+                                                  ),
+                                                ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox();
                           },
                         ),
                       ],
@@ -194,9 +292,9 @@ class _CustomUserFormDialogState extends State<CustomUserFormDialog> {
                           ),
                           onPressed: widget.onTapPrimaryButton,
                           child: Text(
-                            "Tambah",
+                            widget.userModel == null ? "Tambah" : "Edit",
                             style: textTheme.titleMedium!.copyWith(
-                              color: primaryBackgroundColor,
+                              color: scaffoldColor,
                             ),
                           ),
                         ),
