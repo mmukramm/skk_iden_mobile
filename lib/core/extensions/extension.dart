@@ -5,6 +5,7 @@ import 'package:skk_iden_mobile/core/enums/snack_bar_type.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
+import 'package:skk_iden_mobile/features/shared/widget/custom_update_definitioin_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_user_form_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_confirmation_dialog.dart';
 import 'package:skk_iden_mobile/features/shared/widget/custom_add_keyword_dialog.dart';
@@ -107,6 +108,22 @@ extension CustomDialogExtension on BuildContext {
         title: title,
         formKey: formKey,
         userModel: userModel,
+        onTapPrimaryButton: onTapPrimaryButton,
+      ),
+    );
+  }
+
+  Future<Object?> showUpdateDefinitionDialog({
+    required String title,
+    required GlobalKey<FormBuilderState> formKey,
+    required VoidCallback onTapPrimaryButton,
+  }) {
+    return showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (context) => CustomUpdateDefinitionDialog(
+        title: title,
+        formKey: formKey,
         onTapPrimaryButton: onTapPrimaryButton,
       ),
     );

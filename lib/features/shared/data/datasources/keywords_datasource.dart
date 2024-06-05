@@ -29,12 +29,37 @@ abstract class KeywordsDataSource {
     @Header('Authorization') String accessToken,
     @Path('id') String id,
   );
-  
+
   @GET('/api/keywords/detail/{id}')
   Future<ApiResponse> getKeywordDetail(
     @Header('Authorization') String accessToken,
     @Path('id') String id,
   );
+
+  @POST('/api/keywords/detail/{id}')
+  Future<ApiResponse> updateKeywordDefinition(
+    @Header('Authorization') String accessToken,
+    @Path('id') String definitionId,
+    @Body() Map<String, String> definition,
+  );
+
+  @DELETE('/api/keywords/definition/{id}')
+  Future<ApiResponse> deleteKeywordDefinition(
+    @Header('Authorization') String accessToken,
+    @Path('id') String definitionId,
+  );
+}
+
+class UpdateKeywordDefinitionParams {
+  final String id;
+  final String definition;
+  UpdateKeywordDefinitionParams({
+    required this.id,
+    required this.definition,
+  });
+  Map<String, String> toResponseMap() => {
+        'definition': definition,
+      };
 }
 
 class PostKeywordParams {

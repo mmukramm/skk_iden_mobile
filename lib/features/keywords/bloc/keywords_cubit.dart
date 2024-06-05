@@ -4,14 +4,16 @@ import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_dataso
 import 'package:skk_iden_mobile/features/shared/data/models/keyword.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/delete_keyword.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/get_all_keyword.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/get_keyword_detail.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/post_keyword.dart';
 
 class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
   GetAllKeyword getAllKeyword;
   PostKeyword postKeyword;
   DeleteKeyword deleteKeyword;
+  GetKeywordDetail getKeywordDetail;
 
-  KeywordsCubit(this.getAllKeyword, this.postKeyword, this.deleteKeyword)
+  KeywordsCubit(this.getAllKeyword, this.postKeyword, this.deleteKeyword, this.getKeywordDetail)
       : super(KeywordsState.initial());
 
   void getKeywords({
@@ -76,4 +78,5 @@ class KeywordsCubit extends Cubit<KeywordsState<Keyword>> {
       (r) => emit(KeywordsState.mutateDataSuccess(message: r)),
     );
   }
+  
 }

@@ -113,4 +113,52 @@ class KeywordsRepositoryImpl implements KeywordsRepository {
       return Left(ServerFailure(e.message!));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> updateKeywordDefinition(
+    UpdateKeywordDefinitionParams updateKeywordDefinitionParams,
+  ) async {
+    try {
+      final result = await keywordsDataSource.updateKeywordDefinition(
+          'Bearer ${CredentialSaver.accessToken}',
+          updateKeywordDefinitionParams.id,
+          updateKeywordDefinitionParams.toResponseMap());
+
+      return Right(result.data as String);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        return const Left(ConnectionFailure(kNoInternetConnection));
+      }
+
+      if (e.response != null) {
+        return Left(authFailureMessageHandler(
+            ApiResponse.fromJson(e.response!.data).message!));
+      }
+
+      return Left(ServerFailure(e.message!));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteKeywordDefinition(String id) async {
+    try {
+      final result = await keywordsDataSource.deleteKeywordDefinition(
+        'Bearer ${CredentialSaver.accessToken}',
+        id,
+      );
+
+      return Right(result.data as String);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        return const Left(ConnectionFailure(kNoInternetConnection));
+      }
+
+      if (e.response != null) {
+        return Left(authFailureMessageHandler(
+            ApiResponse.fromJson(e.response!.data).message!));
+      }
+
+      return Left(ServerFailure(e.message!));
+    }
+  }
 }

@@ -7,9 +7,11 @@ import 'package:skk_iden_mobile/core/extensions/extension.dart';
 import 'package:skk_iden_mobile/core/helper/asset_helper.dart';
 import 'package:skk_iden_mobile/core/theme/colors.dart';
 import 'package:skk_iden_mobile/core/theme/text_theme.dart';
+import 'package:skk_iden_mobile/core/utils/date_formatter.dart';
 import 'package:skk_iden_mobile/core/utils/keys.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/keywords_cubit.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/state/keywords_state.dart';
+import 'package:skk_iden_mobile/features/keywords/keywords_detail_page.dart';
 import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword.dart';
 import 'package:skk_iden_mobile/features/shared/data/models/keyword_data.dart';
@@ -379,7 +381,7 @@ class KeywordItem extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              Text(item.createdAt ?? ""),
+              Text(formatDateTime(item.createdAt ?? "")),
             ],
           ),
           const SizedBox(
@@ -413,7 +415,15 @@ class KeywordItem extends StatelessWidget {
               ),
               Expanded(
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    navigatorKey.currentState!.push(
+                      MaterialPageRoute(
+                        builder: (_) => KeywordsDetailPage(
+                          id: item.keywordId!,
+                        ),
+                      ),
+                    );
+                  },
                   style: FilledButton.styleFrom(
                     backgroundColor: infoColor,
                     shape: RoundedRectangleBorder(

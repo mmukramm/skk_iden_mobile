@@ -12,4 +12,8 @@ abstract class KeywordsRepository {
   Future<Either<Failure, String>> deleteKeyword(String id);
 
   Future<Either<Failure, KeywordDetail>> getKeywordDetail(String id);
+
+  Future<Either<Failure, String>> updateKeywordDefinition(UpdateKeywordDefinitionParams updateKeywordDefinitionParams);
+  
+  Future<Either<Failure, String>> deleteKeywordDefinition(String id);
 }

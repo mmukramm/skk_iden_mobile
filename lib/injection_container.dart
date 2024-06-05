@@ -14,13 +14,16 @@ import 'package:skk_iden_mobile/features/auth/presentation/bloc/auth_login_info_
 import 'package:skk_iden_mobile/features/auth/presentation/bloc/sign_in_check_cubit.dart';
 import 'package:skk_iden_mobile/features/home/bloc/home_cubit.dart';
 import 'package:skk_iden_mobile/features/keywords/bloc/keywords_cubit.dart';
+import 'package:skk_iden_mobile/features/keywords/bloc/keywords_detail_cubit.dart';
 import 'package:skk_iden_mobile/features/shared/data/datasources/keywords_datasource.dart';
 import 'package:skk_iden_mobile/features/shared/data/repositories/keywords_repository_impl.dart';
 import 'package:skk_iden_mobile/features/shared/domain/repositories/keywords_repository.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/delete_keyword.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/delete_keyword_definition.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/get_all_keyword.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/get_keyword_detail.dart';
 import 'package:skk_iden_mobile/features/shared/domain/usecases/post_keyword.dart';
+import 'package:skk_iden_mobile/features/shared/domain/usecases/post_keyword_definition.dart';
 import 'package:skk_iden_mobile/features/users/data/datasources/user_datasource.dart';
 import 'package:skk_iden_mobile/features/users/data/repositories/user_repository_impl.dart';
 import 'package:skk_iden_mobile/features/users/domain/repositories/user_repository.dart';
@@ -51,6 +54,12 @@ void initBlocs() {
         getIt(),
         getIt(),
         getIt(),
+        getIt(),
+      ));
+  getIt.registerFactory(() => KeywordsDetailCubit(
+        getIt(),
+        getIt(),
+        getIt(),
       ));
   getIt.registerFactory(() => HomeCubit(
         getIt(),
@@ -74,6 +83,8 @@ void initUseCases() {
   getIt.registerLazySingleton(() => PostKeyword(getIt()));
   getIt.registerLazySingleton(() => DeleteKeyword(getIt()));
   getIt.registerLazySingleton(() => GetKeywordDetail(getIt()));
+  getIt.registerLazySingleton(() => PostKeywordDefinition(getIt()));
+  getIt.registerLazySingleton(() => DeleteKeywordDefinition(getIt()));
 
   getIt.registerLazySingleton(() => GetAllUser(getIt()));
   getIt.registerLazySingleton(() => DeleteUser(getIt()));
